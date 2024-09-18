@@ -1,0 +1,51 @@
+CloudFormation do  
+    events = external_parameters.fetch(:events, {})
+    events.each do |name, properties|
+      # event pattern
+      event_pattern = {
+        source: [properties["source"]],
+        "detail-type": [properties["detail_type"]]
+      }
+      event_pattern["detail"] = properties["detail"]
+
+      # event targets
+      targets = []
+      properties['targets'].each do |target|
+        event_target = {}
+
+        event_target["Arn"] = target["arn"]
+        event_target["Id"] = FnSub("${EnvironmentName}-#{target["id"]}")
+        event_target["Input"] = FnSub(target["input"].to_json) if target.has_key?('input')
+
+        if target.has_key?('dlq_arn')
+          event_target["DeadLetterConfig"] = {
+            "Arn": target["dlq_arn"]
+          }
+        end
+
+        targets.append(event_target)
+      end
+
+      Events_Rule(name) do
+        Description FnSub("${EnvironmentName}-#{name}")
+        State Ref(:EventsRuleState)
+        EventPattern FnSub(event_pattern.to_json)
+        Targets targets
+      end
+
+      # eventbridge permission resource depending on the target type
+      properties['targets'].each do |target|
+        case target["type"]
+        when "lambda"
+          Lambda_Permission("#{target["id"]}Permission") do
+            FunctionName target["arn"]
+            Action 'lambda:InvokeFunction'
+            Principal 'events.amazonaws.com'
+            SourceArn FnGetAtt(name, "Arn")
+          end
+        end
+      end
+
+    end
+  end
+  
