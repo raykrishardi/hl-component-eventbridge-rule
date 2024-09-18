@@ -1,12 +1,20 @@
 CloudFormation do  
     events = external_parameters.fetch(:events, {})
     events.each do |name, properties|
-      # event pattern
-      event_pattern = {
-        source: [properties["source"]],
-        "detail-type": [properties["detail_type"]]
-      }
-      event_pattern["detail"] = properties["detail"]
+      event_pattern = {}
+      schedule_pattern = ""
+
+      # rule with event pattern or schedule
+      case properties["type"]
+      when "event_pattern"
+        event_pattern = {
+          source: [properties["source"]],
+          "detail-type": [properties["detail_type"]]
+        }
+        event_pattern["detail"] = properties["detail"]
+      when "schedule"
+        schedule_pattern = properties["schedule_pattern"]
+      end
 
       # event targets
       targets = []
@@ -29,7 +37,8 @@ CloudFormation do
       Events_Rule(name) do
         Description FnSub("${EnvironmentName}-#{name}")
         State Ref(:EventsRuleState)
-        EventPattern FnSub(event_pattern.to_json)
+        EventPattern FnSub(event_pattern.to_json) if properties["type"] == "event_pattern"
+        ScheduleExpression schedule_pattern if properties["type"] == "schedule"
         Targets targets
       end
 

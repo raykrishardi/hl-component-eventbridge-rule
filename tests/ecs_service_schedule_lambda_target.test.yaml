@@ -4,14 +4,8 @@ test_metadata:
 
 events:
   TestEvent:
-    type: event_pattern
-    source: aws.ecs
-    detail_type: ECS Task State Change
-    detail:
-      lastStatus: ["RUNNING"]
-      desiredStatus: ["RUNNING"]
-      clusterArn: ["arn:aws:ecs:ap-southeast-2:123456789012:cluster/cluster1"]
-      group: ["service:nginx"]
+    type: schedule
+    schedule_pattern: cron(0/5 * * * ? *)
     targets:
     - arn: arn:aws:lambda:ap-southeast-2:123456789012:function:hello-world
       id: HelloWorldLambda
