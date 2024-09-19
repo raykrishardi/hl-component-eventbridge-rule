@@ -1,5 +1,5 @@
 CfhighlanderTemplate do
-    Name 'hl-component-eventbridge-rule'
+    Name 'eventbridge-rule'
     ComponentVersion component_version
     Description "#{component_name} - #{component_version}"
     
