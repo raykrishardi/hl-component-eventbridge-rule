@@ -1,6 +1,6 @@
 test_metadata:
   type: config
-  name: ecs_service_event_lambda_target
+  name: ecs_service_schedule_lambda_target
 
 events:
   TestEvent:
