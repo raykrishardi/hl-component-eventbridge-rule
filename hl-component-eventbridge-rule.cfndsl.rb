@@ -46,7 +46,7 @@ CloudFormation do
       properties['targets'].each do |target|
         case target["type"]
         when "lambda"
-          Lambda_Permission("#{target["id"]}Permission") do
+          Lambda_Permission("#{name}#{target["id"]}Permission") do
             FunctionName target["arn"]
             Action 'lambda:InvokeFunction'
             Principal 'events.amazonaws.com'
