@@ -8,10 +8,10 @@ CloudFormation do
       case properties["type"]
       when "event_pattern"
         event_pattern = {
-          source: [properties["source"]],
-          "detail-type": [properties["detail_type"]]
+          source: properties["source"],
+          "detail-type": properties["detail_type"],
+          "detail": properties["detail"]
         }
-        event_pattern["detail"] = properties["detail"]
       when "schedule"
         schedule_pattern = properties["schedule_pattern"]
       end

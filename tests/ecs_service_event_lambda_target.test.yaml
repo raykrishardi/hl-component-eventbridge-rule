@@ -5,8 +5,8 @@ test_metadata:
 events:
   TestEvent:
     type: event_pattern
-    source: aws.ecs
-    detail_type: ECS Task State Change
+    source: ["aws.ecs"]
+    detail_type: ["ECS Task State Change"]
     detail:
       lastStatus: ["RUNNING"]
       desiredStatus: ["RUNNING"]
