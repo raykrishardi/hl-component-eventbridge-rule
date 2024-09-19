@@ -21,13 +21,13 @@ CloudFormation do
       properties['targets'].each do |target|
         event_target = {}
 
-        event_target["Arn"] = target["arn"]
+        event_target["Arn"] = FnSub(target["arn"])
         event_target["Id"] = FnSub("${EnvironmentName}-#{target["id"]}")
         event_target["Input"] = FnSub(target["input"].to_json) if target.has_key?('input')
 
         if target.has_key?('dlq_arn')
           event_target["DeadLetterConfig"] = {
-            "Arn": target["dlq_arn"]
+            "Arn": FnSub(target["dlq_arn"])
           }
         end
 
@@ -47,7 +47,7 @@ CloudFormation do
         case target["type"]
         when "lambda"
           Lambda_Permission("#{name}#{target["id"]}Permission") do
-            FunctionName target["arn"]
+            FunctionName FnSub(target["arn"])
             Action 'lambda:InvokeFunction'
             Principal 'events.amazonaws.com'
             SourceArn FnGetAtt(name, "Arn")
