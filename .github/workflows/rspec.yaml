@@ -4,15 +4,5 @@ on: [push, pull_request]
 
 jobs:
   rspec:
-    runs-on: ubuntu-latest
-    container: 
-      image: theonestack/cfhighlander:latest
-      options: --user 1001 # this user is required as this is the uid used by the checkout step
-
-    steps:
-    - uses: actions/checkout@v3
-    - run: rspec
-      env:
-        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ap-southeast-2
+    uses: theonestack/shared-workflows/.github/workflows/rspec.yaml@main
+    secrets: inherit
