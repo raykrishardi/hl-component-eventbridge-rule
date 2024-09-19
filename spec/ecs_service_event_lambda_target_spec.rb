@@ -1,6 +1,6 @@
 require 'yaml'
 
-describe 'compiled component hl-component-eventbridge-rule' do
+describe 'compiled component eventbridge-rule' do
   
   context 'cftest' do
     it 'compiles test' do
@@ -8,7 +8,7 @@ describe 'compiled component hl-component-eventbridge-rule' do
     end      
   end
   
-  let(:template) { YAML.load_file("#{File.dirname(__FILE__)}/../out/tests/ecs_service_event_lambda_target/hl-component-eventbridge-rule.compiled.yaml") }
+  let(:template) { YAML.load_file("#{File.dirname(__FILE__)}/../out/tests/ecs_service_event_lambda_target/eventbridge-rule.compiled.yaml") }
   
   context "Resource" do
 
